@@ -73,7 +73,8 @@ internal sealed class DefaultPolicy : IOutputCachePolicy
         }
 
         // Verify existence of authorization headers
-        if (!StringValues.IsNullOrEmpty(request.Headers.Authorization) || request.HttpContext.User?.Identity?.IsAuthenticated == true)
+        if ((!StringValues.IsNullOrEmpty(request.Headers.Authorization) && request.HttpContext.GetEndpoint()?.Metadata?.GetMetadata<AllowAnonymousAttribute>()==null) 
+            || request.HttpContext.User?.Identity?.IsAuthenticated == true)
         {
             return false;
         }
